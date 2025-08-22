@@ -1,8 +1,5 @@
 package com.learningSpring.springFirst;
-import com.learningSpring.springFirst.cardatabase.Car;
-import com.learningSpring.springFirst.cardatabase.CarRepository;
-import com.learningSpring.springFirst.cardatabase.Owner;
-import com.learningSpring.springFirst.cardatabase.OwnerRepository;
+import com.learningSpring.springFirst.cardatabase.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +11,13 @@ import java.util.Arrays;
 
 @SpringBootApplication
 public class SpringFirstApplication implements CommandLineRunner {
-	private CarRepository repository;
-	private OwnerRepository ownRepository;
-	public SpringFirstApplication(CarRepository repository ,OwnerRepository owner) {
+	private final CarRepository repository;
+	private final OwnerRepository ownRepository;
+	private AppUserRepository userRepository;
+	public SpringFirstApplication(CarRepository repository ,OwnerRepository owner,AppUserRepository userRepository) {
 		this.repository=repository;
 		this.ownRepository=owner;
+		this.userRepository=userRepository;
 	}
 
 	public static final Logger logger=LoggerFactory.getLogger(SpringFirstApplication.class);
@@ -27,6 +26,7 @@ public class SpringFirstApplication implements CommandLineRunner {
 		SpringApplication.run(SpringFirstApplication.class, args);
 		logger.info("Application Started");
 	}
+	@Override
 	public void run(String... args){
 
 		Owner owner1=new Owner("mohit ","sharma");
@@ -43,6 +43,12 @@ public class SpringFirstApplication implements CommandLineRunner {
 		for(Car car:repository.findAll()){
 			logger.info("brand: {}, model: {}",car.getBrand(),car.getModel());
 		}
+		// Username: user, password: user
+		userRepository.save(new AppUser("user",
+				"$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue","USER"));
+// Username: admin, password: admin
+				userRepository.save(new AppUser("admin",
+						"$2a$10$8cjz47bjbR4Mn8GMg9IZx.vyjhLXR/SKKMSZ9.mP9vpMu0ssKi8GW", "ADMIN"));
 	}
 
 }
